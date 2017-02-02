@@ -7,24 +7,33 @@ var complete = false;
 var alphabet = "abcdefghijklmnopqrstuvwxyz";
 var validityArray = new Array(26).fill(0);
 var numCorrect = 0;
+var numCorrectMem = 0;
 var counter = 0;
-
+var gameSuccess = false;
+var finishTime = Number.MAX_SAFE_INTEGER;
 document.onkeydown = function(evt) {
+	if(numCorrectMem > 25){numCorrectMem = 0; resetButtons();}
 	event = evt || window.event;
 	if(!event.repeat){
     	if(!started && !complete){
-	    	start();
+    		
+	    	start();	
 	    }
 	    testValidity(event);
 	}
 };
 
+function needReset(){
+	if(numCorrect == 26){
+		resetButtons();
+	}
+}
 
 function start(){
 	started = true;
 	startTime = Date.now();
 	interval = setInterval(update, 1);
-	resetButtons();
+	
 }
 
 function update(){
@@ -37,20 +46,19 @@ function render(){
 }
 
 function restart(){
-	resetButtons();
 	resetVariables();
 }
 
 function resetButtons(){
-	for( i = 0; i < alphabet.length; i++){
+	for(i = 0; i < alphabet.length; i++){
 		document.getElementById(alphabet.charAt(i)).className = "inactive";
 	}
 }
 
 function resetVariables(){
 	validityArray.fill(0);
-	resetButtons();
 	counter = 0;
+	numCorrectMem = numCorrect;
 	numCorrect = 0;
 	clearInterval(interval);
 	interval = null;
@@ -67,7 +75,6 @@ function complete(){
 function testValidity(evt){
 	evt = evt || window.event;
     var charCode = evt.keyCode || evt.which;
-    
     //test for backspace
     if(charCode == 08){  
     	if(counter > 0){
@@ -79,6 +86,7 @@ function testValidity(evt){
 
     //test for enter
     else if(charCode == 13){
+    	resetButtons();
     	restart();
     	complete();
 	}
@@ -97,11 +105,24 @@ function testValidity(evt){
 		}
 		counter++;
 	}
-	numDisplay();
+	displayWpm();
+	//numDisplay();
 	if(counter == 26 && numCorrect == 26){
+		displayCurrentBest();
 	    restart();
 	   	complete();
     }
+}
+
+function displayCurrentBest(){
+	finishTime = Math.min(finishTime, clock);
+	document.getElementById("record").innerHTML = finishTime;
+}
+function displayWpm(){
+	if(clock){
+	//letters per minute divided by average word length (5.1)
+	document.getElementById("wpm").innerHTML = Math.floor((60*(numCorrect / clock))/5.1);
+	}
 }
 
 function numDisplay(){
