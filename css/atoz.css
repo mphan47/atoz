@@ -30,3 +30,7 @@ html, body {
 .incorrect{
 	color: red;
 }
+
+.inactive{
+	color: black;
+}

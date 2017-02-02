@@ -1,21 +1,30 @@
-//-----------stopwatch-----------------
 
 var startTime;
 var interval;
 var clock;
 var started = false;
+var complete = false;
+var alphabet = "abcdefghijklmnopqrstuvwxyz";
+var validityArray = new Array(26).fill(0);
+var numCorrect = 0;
+var counter = 0;
 
-document.getElementById("start").onkeypress = function(evt) {
-    testValidity(evt);
-    if(!started){
-    	started = true;
-    	start();
-    }
+document.onkeydown = function(evt) {
+	event = evt || window.event;
+	if(!event.repeat){
+    	if(!started && !complete){
+	    	start();
+	    }
+	    testValidity(event);
+	}
 };
 
+
 function start(){
+	started = true;
 	startTime = Date.now();
 	interval = setInterval(update, 1);
+	resetButtons();
 }
 
 function update(){
@@ -28,66 +37,101 @@ function render(){
 }
 
 function restart(){
-	started = false;
-	counter = 0;
-	clearInterval(interval);
+	resetButtons();
+	resetVariables();
 }
-//-----------game-----------------
 
-var alphabet = "abcdefghjiklnmopqrstuvwxyz";
-var alphabet2 = "zyxwvutsrqpomnlkjihgfedcba";
-var validityArray = new Array(26).fill(0);
-var numCorrect = 0;
-var counter = 0;
+function resetButtons(){
+	for( i = 0; i < alphabet.length; i++){
+		document.getElementById(alphabet.charAt(i)).className = "inactive";
+	}
+}
 
+function resetVariables(){
+	validityArray.fill(0);
+	resetButtons();
+	counter = 0;
+	numCorrect = 0;
+	clearInterval(interval);
+	interval = null;
+	started = false;	
+}
+
+function complete(){
+	complete = true;
+	clearInterval(interval);
+	interval = null;
+}
+
+//the main block of game logic
 function testValidity(evt){
 	evt = evt || window.event;
     var charCode = evt.keyCode || evt.which;
-    var charStr = String.fromCharCode(charCode);
-    var currentLetter = alphabet.charAt(counter);
-    if(alphabet.charAt(counter) == charStr){
-    	tallyCorrect(counter);
-    	changeElement(counter, charCode, true);
-	}
-	else{
-		tallyIncorrect(counter);
-    	changeElement(counter, charCode, false);
-	}
-	if(counter == 25){
-    	restart();
-    	
+    
+    //test for backspace
+    if(charCode == 08){  
+    	if(counter > 0){
+    		counter--;
+    	}
+    	tallyIncorrect(counter);
+    	changeElement(counter, charCode, 3);
     }
-    counter++;
+
+    //test for enter
+    else if(charCode == 13){
+    	restart();
+    	complete();
+	}
+   
+   	//every other keypress
+    else{
+    	var charStr = String.fromCharCode(charCode).toLowerCase();
+    	var currentLetter = alphabet.charAt(counter);
+    	if(alphabet.charAt(counter) == charStr){
+	    	tallyCorrect(counter);
+    		changeElement(counter, charCode, 1);
+		}
+		else{
+			tallyIncorrect(counter);
+    		changeElement(counter, charCode, 2);
+		}
+		counter++;
+	}
+	numDisplay();
+	if(counter == 26 && numCorrect == 26){
+	    restart();
+	   	complete();
+    }
 }
 
-function tallyCorrect(index){
-	validityArray[counter] = 1;
-   	numCorrect = numCorrect + 1;
-   	document.getElementById("temp").innerHTML = "numcorrect: " + 
-   		numCorrect + "\n" +"counter: " + counter;
-}
-
-function tallyIncorrect(index){
-	validityArray[counter] = 0;
-	//numCorrect = numCorrect - 1;
+function numDisplay(){
 	document.getElementById("temp").innerHTML = "numcorrect: " + 
    		numCorrect + "\n" +"counter: " + counter;
+}
+
+function tallyCorrect(counter){
+	validityArray[counter] = 1;
+   	numCorrect = numCorrect + 1;
+}
+
+function tallyIncorrect(counter){
+	if(validityArray[counter] == 1){
+		numCorrect--;
+		validityArray[counter] = 0;
+	}	
 }
 
 function changeElement(counter, inputAscii, correct){
 	var thisChar = String.fromCharCode(counter+97);
 	var lowercase = thisChar.toLowerCase();
-	if(correct){
+	if(correct==1){
 		document.getElementById(lowercase).className = "correct";	
 	}
-	else{
+	if(correct==2){
 		document.getElementById(lowercase).className = "incorrect";	
 	}
-	var counterToAscii = counter+97;
-	/*
-	alert("expected: " + thisChar + "(" + counterToAscii + ")"
-	 + "\n" + "input: " + inputAscii);
-	 */
-	//a = 65
+	if(correct==3){
+		document.getElementById(lowercase).className = "inactive";	
+	}
 }
 
