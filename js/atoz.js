@@ -179,6 +179,9 @@ function changeElement(counter, inputType){
 	}
 }
 
+
+//Unused cookie functions  ------------------------------------
+
 /*
 	creates a cookie with the given parameters
 	name - the name of the cookie (used for record in this app)
