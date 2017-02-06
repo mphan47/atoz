@@ -122,7 +122,7 @@ function testValidity(evt){
 function displayCurrentBest(){
 	//finishTime = Math.min(getCookieValue(record), clock);
 	finishTime = Math.min(finishTime, clock);
-	setCookie(record, finishTime, 7);
+	//setCookie(record, finishTime, 7);
 	document.getElementById("record").innerHTML = finishTime;
 }
 
@@ -180,14 +180,12 @@ function changeElement(counter, inputType){
 }
 
 
-//Unused cookie functions  ------------------------------------
-
 /*
 	creates a cookie with the given parameters
 	name - the name of the cookie (used for record in this app)
 	value - the value to be associated with the cookie
 	expirationDays - time until the cookie expires
-*/
+
 function setCookie(name, value, expirationDays){
 	var d = new Date();
 	d.setTime(d.getTime() + (expirationDays*24*60*60*1000));
@@ -195,10 +193,10 @@ function setCookie(name, value, expirationDays){
 	document.cookie = name + "=" + value + ";" + expires + ";path=/";
 }
 
-/*
+
 	returns the value of the cookie with the given name
 	name - the name of the cookie to be obtained
-*/
+
 function getCookieValue(name) {
 	var value = "; " + document.cookie;
 	var parts = value.split("; " + name + "=");
@@ -207,3 +205,4 @@ function getCookieValue(name) {
 	}
 }
 
+*/
