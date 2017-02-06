@@ -201,4 +201,7 @@ function getCookieValue(name) {
 	if (parts.length == 2) {
   		return parts.pop().split(";").shift();
 	}
+	else{
+		return "-";
+	}
 }
