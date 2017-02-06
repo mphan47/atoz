@@ -10,7 +10,7 @@ var numCorrectMem = 0;
 var counter = 0;
 var finishTime = Number.MAX_SAFE_INTEGER;
 
-document.getElementById("record").innerHTML = getCookieValue(record);
+//document.getElementById("record").innerHTML = getCookieValue(record);
 
 /*
 	checks to see if a game is in progress
@@ -120,7 +120,8 @@ function testValidity(evt){
 
 //displays the lowest finish time of the player
 function displayCurrentBest(){
-	finishTime = Math.min(getCookieValue(record), clock);
+	//finishTime = Math.min(getCookieValue(record), clock);
+	finishTime = Math.min(finishTime, clock);
 	setCookie(record, finishTime, 7);
 	document.getElementById("record").innerHTML = finishTime;
 }
@@ -201,7 +202,5 @@ function getCookieValue(name) {
 	if (parts.length == 2) {
   		return parts.pop().split(";").shift();
 	}
-	else{
-		return "-";
-	}
 }
+
