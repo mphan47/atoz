@@ -34,7 +34,6 @@ html, body {
 	word-spacing:-5pt;
 	font-size:26px;
 	text-align:left;
-	
 	line-height:1;
 }
 #background{
@@ -52,6 +51,13 @@ span{
 	display: inline-block;
 	vertical-align: center;
 }
+#cookies{
+	bottom:0;
+	right:0;
+	position: fixed;
+	font-size:10px;
+	width:25%;
+}
 #info{
     width: 90%;
 	position: absolute;
@@ -64,14 +70,12 @@ span{
 }
 .infodiv{
     float: left;
-    
 	padding: 10px 15px;
 	border:solid 3px;
     border-radius: 11px;
     padding: 2px;
     margin-left:10%;
     text-align: center;
-    /* change border to be inside the box */
     box-sizing:border-box;
     -moz-box-sizing:border-box;
     -webkit-box-sizing:border-box;
@@ -86,4 +90,3 @@ span{
 .inactive{
 	color: black;
 }
-
